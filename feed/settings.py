@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mails',
+    'users',
     'channels',
 ]
 
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'feed.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,12 +138,19 @@ USE_L10N = True
 USE_TZ = True
 
 
+# LOGIN_REDIRECT_URL = 'home'  # заменить на URL домашней страницы
+LOGOUT_REDIRECT_URL = 'login'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "/vol/static"
+STATIC_ROOT = "/vol/static/"
 
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

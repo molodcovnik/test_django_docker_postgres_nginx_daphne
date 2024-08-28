@@ -21,7 +21,7 @@ services:
     restart: always
     volumes:
       - .:/code
-      - static-data:/vol/static
+      - static-data:/vol/static/
     ports:
       - "8000:8000"
     depends_on:
@@ -37,7 +37,7 @@ services:
       context: ./proxy
     restart: always
     volumes:
-      - static-data:/vol/static
+      - static-data:/vol/static/
     ports:
       - "80:80"
     depends_on:
