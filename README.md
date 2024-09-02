@@ -27,12 +27,14 @@
 
 #### Открываем еще один терминал и вводим следующие команды
 
-    `cd test_django_docker_postgres_nginx_daphne`
-    `python3 -m venv venv`
-    `source ./venv/bin/activate`
-    `pip install -r requirements.txt`
-    `python manage.py migrate`
-    `python manage.py runserver`
+```
+    cd test_django_docker_postgres_nginx_daphne
+    python3 -m venv venv
+    source ./venv/bin/activate
+    pip install -r requirements.txt
+    python manage.py migrate
+    python manage.py runserver
+```
 
 1. Заходим по урл 127.0.0.1:8000 
 
