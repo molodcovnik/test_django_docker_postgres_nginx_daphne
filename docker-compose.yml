@@ -12,6 +12,7 @@ services:
 
   redis_feed:
     image: redis:latest
+    container_name: redis_feed
     ports:
       - "6379:6379"
 
@@ -28,8 +29,9 @@ services:
       - db_feed
       - redis_feed
     environment:
+      DJANGO_SETTINGS_MODULE: feed.settings
       DATABASE_URL: postgres://postgres:password@db_feed:5432/django_db
-      REDIS_URL: redis_feed://redis_feed:6379/0
+      REDIS_URL: redis://redis_feed:6379/0
 
   nginx:
     image: nginx:latest

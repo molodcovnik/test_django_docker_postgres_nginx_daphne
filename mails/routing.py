@@ -1,6 +1,8 @@
 from django.urls import re_path
-# from . import consumers
+
+from mails.consumers import EmailMessageConsumer, EmailCounterConsumer
 
 websocket_urlpatterns = [
-    # re_path(r"ws/chat/(?P<room_name>\w+)/$", consumers.ChatConsumer.as_asgi()),
+    re_path(r'^ws/(?P<account_id>\d+)/$', EmailMessageConsumer.as_asgi()),
+    re_path(r'ws/(?P<account_id>\d+)/counter/$', EmailCounterConsumer.as_asgi()),
 ]

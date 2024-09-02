@@ -1,0 +1,212 @@
+{% extends 'flatpages/default.html' %}
+{% load static %}
+
+{% block content %}
+<div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-text" id="progressText"><span>Проверено сообщений: 0</span></div>
+</div>
+
+<div class="wrapper-grid-table">
+    <table id="table-results">
+        <tr>
+            <th>Id</th>
+            <th>Тема сообщения</th>
+            <th>Дата отправки</th>
+            <th>Дата получения</th>
+            <th>Текст сообщения</th>
+            <th>Список файлов</th>
+        </tr>
+
+    </table>
+</div>
+{{ account_id | json_script:"account_id" }}
+<script>
+    let accountId = {{ account_id }};
+    let baseCount = 0;
+    let currentCount = 0;
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+    // Функция для загрузки писем
+    async function loadEmails(accountId) {
+        try {
+            // Выполняем fetch запрос к API
+            const response = await fetch(`http://localhost:8000/api/emails/${accountId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const emails = await response.json(); // Предполагается, что сервер возвращает JSON
+            // Получаем таблицу
+            const table = document.getElementById("table-results");
+
+            // Очищаем существующие строки, кроме заголовков
+            // table.querySelectorAll("tr:not(:first-child)").forEach(row => row.remove());
+
+            // Добавляем новые строки с письмами
+            emails.forEach(email => {
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td>${email.uid}</td>
+                    <td>${email.subject}</td>
+                    <td>${email.sent_date}</td>
+                    <td>${email.received_date}</td>
+                    <td>${email.message_text}</td>
+                    <td>${email.attachments}</td>
+                `;
+            });
+
+        } catch (error) {
+            console.error('Ошибка при загрузке писем:', error);
+        }
+    }
+
+    // Пример вызова функции с account_id = 1
+    // loadEmails(accountId);
+});
+    // const socket = new WebSocket(`ws://localhost:8000/ws/${accountId}/`); для докер окружения
+    const socket = new WebSocket(`ws://localhost:8000/ws/${accountId}/`);
+    socket.onopen = function(event) {
+        console.log('WebSocket соединение установлено.');
+    };
+
+    socket.onmessage = function(event) {
+    console.log('Сообщение от WebSocket:', event.data);  // Проверяем сырые данные
+    try {
+        const data = JSON.parse(event.data);  // Преобразуем данные из JSON-строки в объект
+        console.log('Декодированные данные:', data);  // Проверяем структуру данных после декодирования
+        
+        // Проверяем, есть ли ключ 'command' в декодированных данных
+        if (data.command === 'new_message') {
+            console.log('Новое сообщение получено:', data.message);
+            addMessageToTable(data.message);
+            currentCount += 1;
+            updateProgressBar(currentCount, baseCount);
+            document.getElementById('progressText').textContent = 'Загрузка сообщений...';
+
+            if (baseCount !== 0 && currentCount === baseCount) {
+                console.log('Все сообщения проверены, удаление текста.');
+                document.getElementById('progressText').textContent = '';  // Очищаем текст
+            }
+        } else {
+            console.log('Неизвестная команда или структура данных:', data);
+        }
+    } catch (error) {
+        console.error('Ошибка при парсинге JSON:', error);
+    }
+};
+
+    socket.onclose = function(event) {
+        if (event.wasClean) {
+            console.log('Соединение закрыто чисто');
+        } else {
+            console.error('Обрыв соединения'); // например, если сервер упал
+        }
+        console.log(`Код: ${event.code} причина: ${event.reason}`);
+    };
+
+    socket.onerror = function(error) {
+        console.error('Ошибка WebSocket:', error);
+    };
+
+    //
+    // let baseCount = 0;
+    // let currentCount = 0;
+    var socketCounter = new WebSocket("ws://localhost:8000/ws/" + accountId + "/counter/");
+
+    socketCounter.onmessage = function(event) {
+        console.log('Сообщение от WebSocket:', event.data);  // Проверяем сырые данные
+        try {
+            const data = JSON.parse(event.data);  // Преобразуем данные из JSON-строки в объект
+            console.log('Декодированные данные:', data);  // Проверяем структуру данных после декодирования
+            
+            // Проверяем, есть ли ключ 'command' в декодированных данных
+            if (data.command === 'count_update') {
+                console.log('Новое счетчик получен:', data.message.count);
+                let count = data.message.count;
+                baseCount = count;
+                // document.getElementById('counter_mails').textContent = count;
+                document.getElementById('progressText').textContent = `Проверено сообщений: ${baseCount}`;
+            } else {
+                console.log('Неизвестная команда или структура данных:', data);
+            }
+        } catch (error) {
+            console.error('Ошибка при парсинге JSON:', error);
+        }
+    };
+
+    socketCounter.onopen = function(event) {
+        console.log("WebSocket Counter соединение установлено.");
+    };
+
+    socketCounter.onclose = function(event) {
+        console.log("WebSocket соединение закрыто.");
+    };
+
+    socketCounter.onerror = function(error) {
+        console.error("WebSocket ошибка:", error);
+    };
+
+    //
+    
+    function updateProgressBar(currentCount, baseCount) {
+        if (baseCount >= 0) {  // Убедимся, что baseCount задано
+            const percentage = (currentCount / baseCount) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `Идет загрузка писем... ${currentCount} из ${baseCount} проверено`;
+        }
+    }
+    
+
+
+    //
+    //
+    function addMessageToTable(message) {
+        const table = document.getElementById('table-results');
+        const row = table.insertRow(1);  // Вставляем новую строку в конец таблицы
+
+        // Вставляем новые ячейки в строку и заполняем их данными сообщения
+        const cellId = row.insertCell(0);
+        const cellSubject = row.insertCell(1);
+        const cellSentDate = row.insertCell(2);
+        const cellReceivedDate = row.insertCell(3);
+        const cellText = row.insertCell(4);
+        const cellAttachments = row.insertCell(5);
+
+        cellId.textContent = message.uid;
+        cellSubject.textContent = message.subject;
+        cellSentDate.textContent = message.sent_date;
+        cellReceivedDate.textContent = message.received_date;
+        cellText.textContent = message.message_text;
+        cellAttachments.textContent = message.attachments ? message.attachments.join(', ') : 'Нет файлов';  // Обработка списка файлов
+    }
+
+    async function fetchEmails(accountId) {
+        const url = `http://localhost:8000/api/${accountId}/`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // Проверяем успешность ответа
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Успех:', data);
+            } else {
+                const errorData = await response.json();
+                console.error('Ошибка:', errorData);
+            }
+        } catch (error) {
+            console.error('Ошибка при выполнении запроса:', error);
+        }
+    }
+    fetchEmails(accountId);
+
+    
+</script>
+{% endblock content %}

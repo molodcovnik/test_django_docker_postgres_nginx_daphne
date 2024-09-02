@@ -19,11 +19,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'feed.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
-    "websocket": SessionMiddlewareStack(
-        AuthMiddlewareStack(
-            URLRouter(
-                mails.routing.websocket_urlpatterns
-            )
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            mails.routing.websocket_urlpatterns
         )
     ),
 })

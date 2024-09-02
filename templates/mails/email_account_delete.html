@@ -1,0 +1,14 @@
+{% extends 'flatpages/default.html' %}
+{% load static %}
+
+{% block content %}
+<div class="head margin-bottom-3rem">
+    <h1 class="head__title margin-top-5rem">Удаляем почту {{ account.email }}?</h1>
+</div>
+<form action="" method="POST" class="form-delete-temp-data padding-top-5rem">
+    {% csrf_token %}
+    <div class="wrapper-btn center">
+        <button type="submit" class="navigation__btn navigation__btn_red">Удалить</button>
+    </div>
+</form>
+{% endblock content %}

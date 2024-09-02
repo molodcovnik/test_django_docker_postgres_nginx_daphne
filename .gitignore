@@ -9,6 +9,7 @@ idea/
 *.sqlite3
 
 __pycache__/
+mails/__pycache__/
 local_settings.py
 .DS_Store
 # venv

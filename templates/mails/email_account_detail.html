@@ -1,0 +1,9 @@
+{% extends 'flatpages/default.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>{{ account.email }}</h2>
+    <p>{{ account.provider }}</p>
+    <p>{{ account.password }}</p>
+    <a href="{% url 'account-delete' account.id %}">Удалить почтовый аккаунт</a>
+{% endblock %}

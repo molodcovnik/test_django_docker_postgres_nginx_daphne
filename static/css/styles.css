@@ -38,8 +38,8 @@ header nav ul li a:hover {
 
 main {
     padding: 20px;
-    max-width: 600px;
-    margin: 20px auto;
+    max-width: 90%;
+    margin: 100px auto;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -102,4 +102,196 @@ form button[type="submit"]:hover {
     background-color: #f44336;
     color: #fff;
     border-radius: 4px;
+}
+
+.wrapper-grid-table {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    overflow-x: auto;
+}
+
+#table-results {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+#table-results th, #table-results td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+#table-results th {
+    background-color: #78736c;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#table-results tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#table-results tr:hover {
+    background-color: #ddd;
+}
+
+#table-results td {
+    font-size: 14px;
+    color: #333;
+}
+
+.select-wrapper {
+    margin: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль для label */
+label {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Стиль для select */
+select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+
+}
+
+/* Стиль для кнопки */
+.select-button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.select-button:hover {
+    background-color: #0056b3;
+}
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    
+}
+
+.email-account-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.mail-account {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.mail-account p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.mail-account a {
+    text-decoration: none;
+}
+
+.mail-account p:last-of-type {
+    font-weight: bold;
+}
+
+.mail-account button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.mail-account button:hover {
+    background-color: #218838;
+}
+
+
+h2 {
+    color: #6c757d;
+    font-size: 18px;
+}
+
+.progress-container {
+    position: relative;
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    height: 30px;
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #4caf50;
+    border-radius: 5px;
+    z-index: 0;
+}
+
+.progress-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 30px; /* Выровнять текст вертикально */
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+    z-index: 2; /* Должно быть больше, чем у progress-bar */
+    background-color: rgba(255, 255, 255, 0.5); /* Полупрозрачный фон, чтобы точно видеть текст */
+}
+
+.create_new_mail_account {
+    padding: 10px;
+    background-color: #37ea67;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
 }
